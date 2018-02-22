@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <ion-title>
+      Main
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="ticker_header">
+    <span class="currency_header" (click)="sort('currency')">
+      종류
+      <span *ngIf="key =='currency'">
+        <ion-icon *ngIf="reverse == 'asc'" name="md-arrow-dropup"></ion-icon>
+        <ion-icon *ngIf="reverse == 'desc'" name="md-arrow-dropdown"></ion-icon>
+      </span>
+    </span>
+    <span class="closing_price_header" (click)="sort('closing_price')">
+      현재가
+      <span *ngIf="key =='closing_price'">
+        <ion-icon *ngIf="reverse == 'asc'" name="md-arrow-dropup"></ion-icon>
+        <ion-icon *ngIf="reverse == 'desc'" name="md-arrow-dropdown"></ion-icon>
+      </span>
+    </span>
+    <span class="day_before_header" (click)="sort('day_before_price')">
+      전일대비
+      <span *ngIf="key =='day_before_price'">
+        <ion-icon *ngIf="reverse == 'asc'" name="md-arrow-dropup"></ion-icon>
+        <ion-icon *ngIf="reverse == 'desc'" name="md-arrow-dropdown"></ion-icon>
+      </span>
+    </span>
+    <span class="volume_header" (click)="sort('volume_price')">
+      거래량
+      <span *ngIf="key =='volume_price'">
+        <ion-icon *ngIf="reverse == 'asc'" name="md-arrow-dropup"></ion-icon>
+        <ion-icon *ngIf="reverse == 'desc'" name="md-arrow-dropdown"></ion-icon>
+      </span>
+    </span>
+  </div>
+  <div class="ticker_body" *ngFor="let ticker of tickerList | orderBy: key : reverse">
+    <!-- 종류 -->
+    <span class="currency_body">
+      <ion-icon *ngIf="ticker.day_before_price < 0" name="trending-down" class="blue"></ion-icon>
+      <ion-icon *ngIf="ticker.day_before_price > 0" name="trending-up" class="red"></ion-icon>
+      {{ticker.currency}}
+    </span>
+    <!-- 현재가 -->
+    <span [hidden]="ticker.day_before_price < 0" class="closing_price_body red">{{ticker.closing_price_toString}}</span>
+    <span [hidden]="ticker.day_before_price > 0" class="closing_price_body blue">{{ticker.closing_price_toString}}</span>
+    <!-- 전일대비 -->
+    <div [hidden]="ticker.day_before_price < 0" class="day_before_body red">
+        <span class="day_before_price">{{ticker.day_before_price_toString}}원</span>
+        <span class="day_before_percent">{{ticker.day_before_percent}}%</span>
+    </div>
+    <div [hidden]="ticker.day_before_price > 0" class="day_before_body blue">
+        <span class="day_before_price">{{ticker.day_before_price_toString}}원</span>
+        <span class="day_before_percent">{{ticker.day_before_percent}}%</span>
+    </div>
+    <!-- 거래량 -->
+    <div class="volume_body">
+      <span class="volume_1day_body">{{ticker.volume_1day_toString}}</span>
+      <span class="volume_price_body">(≈ {{ticker.volume_price_toString}}원)</span>
+    </div>
+  </div>
+</ion-content>
